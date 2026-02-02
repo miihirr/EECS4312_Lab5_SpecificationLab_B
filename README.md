@@ -1,6 +1,6 @@
 ## TODO:
-## Student Name:
-## Student ID: 
+## Student Name: Mihirkumar Patel
+## Student ID: 219695808
 
 # Is Resource Allocation Feasible Lab Repository
 
