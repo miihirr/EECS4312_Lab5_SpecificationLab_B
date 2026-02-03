@@ -8,6 +8,8 @@ Students can run these tests locally to check basic correctness of their impleme
 The hidden test suite used for grading contains additional edge cases and will not be
 available to students.
 """
+import sys
+sys.path.insert(0, '../src')
 from solution import is_allocation_feasible
 import pytest
 

@@ -29,5 +29,26 @@ def is_allocation_feasible(
         True if the allocation is feasible, False otherwise.
 
     """
-    # TODO: Implement this function
-    raise NotImplementedError("suggest_slots function has not been implemented yet")
+    # Validate that all requests are dictionaries
+    for request in requests:
+        if not isinstance(request, dict):
+            raise ValueError("Each request must be a dictionary")
+    
+    # Calculate total demand for each resource
+    total_demand = {}
+    
+    for request in requests:
+        for resource, amount in request.items():
+            # Check if the requested resource exists in available resources
+            if resource not in resources:
+                return False
+            
+            # Sum up the total demand for this resource
+            total_demand[resource] = total_demand.get(resource, 0) + amount
+    
+    # Check if total demand for each resource exceeds available capacity
+    for resource, capacity in resources.items():
+        if total_demand.get(resource, 0) > capacity:
+            return False
+    
+    return True
