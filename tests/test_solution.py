@@ -1,5 +1,5 @@
-## Student Name:
-## Student ID: 
+## Student Name: Mihir Patel    
+## Student ID: 219695808
 
 """
 Public test suite for the meeting slot suggestion exercise.
@@ -48,3 +48,43 @@ def test_non_dict_request_raises():
         is_allocation_feasible(resources, requests)
 
 """TODO: Add at least 5 additional test cases to test your implementation."""
+def test_empty_requests_feasible():
+    # No requests should always be feasible
+    resources = {'cpu': 5, 'mem': 10}
+    requests = []
+    assert is_allocation_feasible(resources, requests) is True
+
+
+def test_exact_capacity_multi_resource():
+    # Multiple resources where total demand equals capacity
+    resources = {'cpu': 5, 'mem': 10}
+    requests = [{'cpu': 2, 'mem': 4}, {'cpu': 3, 'mem': 6}]
+    assert is_allocation_feasible(resources, requests) is True
+
+
+def test_fractional_requests():
+    # Support for numeric (float) amounts and exact fractional sums
+    resources = {'cpu': 4.5}
+    requests = [{'cpu': 1.5}, {'cpu': 3.0}]
+    assert is_allocation_feasible(resources, requests) is True
+
+
+def test_unused_resource_in_resources():
+    # Extra resources in availability that are unused should not affect feasibility
+    resources = {'cpu': 5, 'disk': 100}
+    requests = [{'cpu': 2}, {'cpu': 3}]
+    assert is_allocation_feasible(resources, requests) is True
+
+
+def test_zero_capacity_zero_request():
+    # Zero capacity and zero demand should be feasible
+    resources = {'cpu': 0}
+    requests = [{'cpu': 0}]
+    assert is_allocation_feasible(resources, requests) is True
+
+
+def test_zero_capacity_nonzero_request_infeasible():
+    # Zero capacity but positive demand should be infeasible
+    resources = {'cpu': 0}
+    requests = [{'cpu': 1}]
+    assert is_allocation_feasible(resources, requests) is False
