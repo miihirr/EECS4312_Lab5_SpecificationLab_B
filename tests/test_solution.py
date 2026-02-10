@@ -20,7 +20,8 @@ def test_basic_feasible_single_resource():
     # Reason: check basic functional requirement
     resources = {'cpu': 10}
     requests = [{'cpu': 3}, {'cpu': 4}, {'cpu': 3}]
-    assert is_allocation_feasible(resources, requests) is True
+    # Now infeasible because it exactly consumes the only resource
+    assert is_allocation_feasible(resources, requests) is False
 
 def test_multi_resource_infeasible_one_overloaded():
     # Multi-Resource Infeasible (one overload)
@@ -59,14 +60,16 @@ def test_exact_capacity_multi_resource():
     # Multiple resources where total demand equals capacity
     resources = {'cpu': 5, 'mem': 10}
     requests = [{'cpu': 2, 'mem': 4}, {'cpu': 3, 'mem': 6}]
-    assert is_allocation_feasible(resources, requests) is True
+    # Both resources are exactly consumed -> infeasible under new rule
+    assert is_allocation_feasible(resources, requests) is False
 
 
 def test_fractional_requests():
     # Support for numeric (float) amounts and exact fractional sums
     resources = {'cpu': 4.5}
     requests = [{'cpu': 1.5}, {'cpu': 3.0}]
-    assert is_allocation_feasible(resources, requests) is True
+    # Fractional sums exactly consume capacity -> infeasible under new rule
+    assert is_allocation_feasible(resources, requests) is False
 
 
 def test_unused_resource_in_resources():
@@ -80,6 +83,15 @@ def test_zero_capacity_zero_request():
     # Zero capacity and zero demand should be feasible
     resources = {'cpu': 0}
     requests = [{'cpu': 0}]
+    # Consumes the only resource completely -> infeasible under new rule
+    assert is_allocation_feasible(resources, requests) is False
+
+
+def test_allocation_requires_at_least_one_unallocated():
+    # At least one resource must remain unallocated for feasibility
+    resources = {'cpu': 5, 'mem': 10, 'disk': 1}
+    requests = [{'cpu': 2, 'mem': 4}, {'cpu': 3, 'mem': 6}]
+    # cpu and mem are consumed but disk remains unused -> feasible
     assert is_allocation_feasible(resources, requests) is True
 
 

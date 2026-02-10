@@ -50,5 +50,11 @@ def is_allocation_feasible(
     for resource, capacity in resources.items():
         if total_demand.get(resource, 0) > capacity:
             return False
-    
-    return True
+
+    # New requirement: at least one resource must remain unallocated (strictly > 0 leftover).
+    # If every resource is fully consumed (demand == capacity), the allocation is infeasible.
+    for resource, capacity in resources.items():
+        if capacity > total_demand.get(resource, 0):
+            return True
+
+    return False
